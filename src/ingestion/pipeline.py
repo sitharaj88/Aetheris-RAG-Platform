@@ -1,0 +1,165 @@
+"""
+Ingestion pipeline orchestrator.
+
+Coordinates loader → preprocessor → chunker → embedder → vector store
+and provides progress logging plus summary statistics.
+"""
+
+from __future__ import annotations
+
+import time
+from pathlib import Path
+from typing import Optional
+
+from src.embedding.base import BaseEmbedder
+from src.ingestion.chunker import BaseChunker
+from src.ingestion.loader import DocumentLoader
+from src.ingestion.preprocessor import TextPreprocessor
+from src.models import Chunk, IngestionStats
+from src.utils.logger import get_logger
+from src.vectorstore.base import BaseVectorStore
+
+log = get_logger(__name__)
+
+
+class IngestionPipeline:
+    """
+    End-to-end document ingestion pipeline.
+
+    Usage::
+
+        pipeline = IngestionPipeline(loader, preprocessor, chunker, embedder, store)
+        stats = pipeline.ingest_file(Path("report.pdf"))
+        stats = pipeline.ingest_directory(Path("./docs"))
+    """
+
+    def __init__(
+        self,
+        loader: DocumentLoader,
+        preprocessor: TextPreprocessor,
+        chunker: BaseChunker,
+        embedder: BaseEmbedder,
+        vector_store: BaseVectorStore,
+    ) -> None:
+        self.loader = loader
+        self.preprocessor = preprocessor
+        self.chunker = chunker
+        self.embedder = embedder
+        self.vector_store = vector_store
+
+    def ingest_file(self, path: Path) -> IngestionStats:
+        """Ingest a single file through the full pipeline."""
+        start = time.perf_counter()
+        stats = IngestionStats()
+        path = Path(path).resolve()
+
+        log.info(f"Ingesting file: {path}")
+
+        # 1. Load
+        documents = self.loader.load_file(path)
+        if not documents:
+            stats.failed_files.append(str(path))
+            stats.elapsed_seconds = time.perf_counter() - start
+            return stats
+
+        stats.total_files = 1
+        stats.total_documents = len(documents)
+
+        # 2. Preprocess
+        documents = self.preprocessor.preprocess_batch(documents)
+
+        # 3. Chunk
+        all_chunks: list[Chunk] = []
+        for doc in documents:
+            chunks = self.chunker.chunk(doc)
+            all_chunks.extend(chunks)
+
+        if not all_chunks:
+            log.warning(f"No chunks produced from {path}")
+            stats.elapsed_seconds = time.perf_counter() - start
+            return stats
+
+        # 4. Embed
+        texts = [c.content for c in all_chunks]
+        embeddings = self.embedder.embed_batch(texts)
+        for chunk, emb in zip(all_chunks, embeddings):
+            chunk.embedding = emb
+
+        # 5. Store
+        self.vector_store.add(all_chunks)
+
+        stats.total_chunks = len(all_chunks)
+        stats.elapsed_seconds = time.perf_counter() - start
+
+        log.info(
+            f"Ingested {path.name}: {stats.total_documents} doc(s), "
+            f"{stats.total_chunks} chunk(s) in {stats.elapsed_seconds:.2f}s"
+        )
+        return stats
+
+    def ingest_directory(
+        self,
+        directory: Path,
+        extensions: Optional[list[str]] = None,
+        recursive: bool = True,
+    ) -> IngestionStats:
+        """Ingest all supported files in *directory*."""
+        start = time.perf_counter()
+        stats = IngestionStats()
+        directory = Path(directory).resolve()
+
+        log.info(f"Ingesting directory: {directory}")
+
+        # 1. Load all documents
+        documents = self.loader.load_directory(
+            directory, extensions=extensions, recursive=recursive
+        )
+        stats.total_documents = len(documents)
+
+        if not documents:
+            log.warning(f"No documents found in {directory}")
+            stats.elapsed_seconds = time.perf_counter() - start
+            return stats
+
+        # Count unique files
+        unique_sources = {d.source for d in documents}
+        stats.total_files = len(unique_sources)
+
+        # 2. Preprocess
+        documents = self.preprocessor.preprocess_batch(documents)
+
+        # 3. Chunk
+        all_chunks: list[Chunk] = []
+        for doc in documents:
+            try:
+                chunks = self.chunker.chunk(doc)
+                all_chunks.extend(chunks)
+            except Exception as exc:
+                log.error(f"Chunking failed for {doc.source}: {exc}")
+                stats.failed_files.append(doc.source)
+
+        if not all_chunks:
+            log.warning("No chunks produced from any document")
+            stats.elapsed_seconds = time.perf_counter() - start
+            return stats
+
+        # 4. Embed in batches
+        log.info(f"Embedding {len(all_chunks)} chunk(s)…")
+        texts = [c.content for c in all_chunks]
+        embeddings = self.embedder.embed_batch(texts)
+        for chunk, emb in zip(all_chunks, embeddings):
+            chunk.embedding = emb
+
+        # 5. Store
+        log.info(f"Storing {len(all_chunks)} chunk(s) in vector store…")
+        self.vector_store.add(all_chunks)
+
+        stats.total_chunks = len(all_chunks)
+        stats.elapsed_seconds = time.perf_counter() - start
+
+        log.info(
+            f"Directory ingestion complete: {stats.total_files} file(s), "
+            f"{stats.total_documents} doc(s), {stats.total_chunks} chunk(s) "
+            f"in {stats.elapsed_seconds:.2f}s"
+        )
+        return stats

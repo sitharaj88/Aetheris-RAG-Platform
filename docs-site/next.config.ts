@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  basePath: isGithubActions ? "/Aetheris-RAG-Platform" : undefined,
+  basePath: isGithubActions ? "/Veridia-RAG-Platform" : undefined,
 };
 
 export default nextConfig;

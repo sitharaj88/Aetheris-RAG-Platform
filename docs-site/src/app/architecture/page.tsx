@@ -35,7 +35,20 @@ export default function ArchitecturePage() {
       {/* HIGH-LEVEL DESIGN (HLD) DIAGRAM */}
       <h2>High-Level Design (HLD)</h2>
       <p>
-        The following layout details the interaction pathways between the browser client, the Next.js API BFF proxy, the FastAPI RAG service, and local model providers:
+        The following processing flow illustrates how a user query moves through our hybrid retrieval and reranking pipelines to generate a self-reflective response:
+      </p>
+
+      <div className="my-8">
+        <img 
+          src="/images/architecture.png" 
+          alt="Veridia RAG Processing Flow Architecture Diagram" 
+          className="rounded-2xl border border-border-light shadow-glow w-full max-w-3xl mx-auto"
+        />
+      </div>
+
+      <h2>System Interface Topology</h2>
+      <p>
+        The layout below details the network interaction pathways between the browser client, the Next.js API BFF proxy, the FastAPI RAG service, and local model providers:
       </p>
 
       <div className="my-8 p-6 bg-bg-surface border border-border-light rounded-2xl shadow-glow overflow-x-auto">

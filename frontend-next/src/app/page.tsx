@@ -207,6 +207,14 @@ export default function ChatPage() {
     }
   };
 
+  const formatFileSize = (bytes: number): string => {
+    if (!bytes || bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  };
+
   const fetchCollections = async () => {
     try {
       const resp = await fetch("/api/collections");
@@ -338,6 +346,7 @@ export default function ChatPage() {
   const handleUploadFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setIsUploading(true);
+    setIsSidebarOpen(true);
     showToast(`Uploading ${files.length} file(s)...`, "info");
 
     const formData = new FormData();
@@ -715,19 +724,30 @@ export default function ChatPage() {
                 {documents.length === 0 ? (
                   <div className="text-xs italic text-text-muted p-3 text-center">No documents yet</div>
                 ) : (
-                  <ul className="space-y-1">
+                  <ul className="space-y-1.5">
                     {documents.map((doc) => (
                       <li
                         key={doc.id}
-                        className="group flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-bg-elevated text-xs text-text-secondary hover:text-text-primary transition-all"
+                        className="group flex flex-col gap-1 px-2.5 py-2 rounded-lg hover:bg-bg-elevated text-xs transition-all border border-transparent hover:border-border-muted"
                       >
-                        <span className="truncate flex-1 pr-2" title={doc.filename}>{doc.filename}</span>
-                        <button
-                          onClick={(e) => handleDeleteDocument(e, doc.id, doc.filename)}
-                          className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-bg-hover text-text-muted hover:text-error transition-all shrink-0 cursor-pointer"
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </button>
+                        <div className="flex items-center justify-between w-full">
+                          <span className="truncate font-medium text-text-primary flex-1 pr-2" title={doc.filename}>
+                            {doc.filename}
+                          </span>
+                          <button
+                            onClick={(e) => handleDeleteDocument(e, doc.id, doc.filename)}
+                            className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-bg-hover text-text-muted hover:text-error transition-all shrink-0 cursor-pointer"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] text-text-muted">
+                          <span className="bg-accent-start/15 text-accent-cyan px-1.5 py-0.5 rounded font-mono font-semibold">
+                            {doc.chunk_count} chunks
+                          </span>
+                          <span>•</span>
+                          <span>{formatFileSize(doc.file_size)}</span>
+                        </div>
                       </li>
                     ))}
                   </ul>

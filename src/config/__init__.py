@@ -1,4 +1,4 @@
-"""Configuration module for RAG1 system."""
+"""Configuration module for Veridia RAG system."""
 
 from src.config.settings import (
     Settings,

@@ -1,4 +1,4 @@
-# RAG1 Configuration
+# Veridia RAG Configuration
 # Override any setting via environment variables or .env file
 
 embedding:
@@ -38,7 +38,7 @@ vectorstore:
 
 logging:
   level: "INFO"
-  file: "logs/rag1.log"
+  file: "logs/veridia.log"
   rotation: "10 MB"
   retention: "7 days"
 

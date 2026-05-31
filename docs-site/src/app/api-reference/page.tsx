@@ -329,7 +329,7 @@ data: {"timing": {"total_ms": 2341.1}, "strategy_used": "corrective"}`
                   <span className={`text-xs font-bold font-mono px-2 py-0.5 rounded border ${badgeColor}`}>
                     {ep.method}
                   </span>
-                  <span className="text-sm font-semibold font-mono text-white select-all">
+                  <span className="text-sm font-semibold font-mono text-text-primary select-all">
                     {ep.path}
                   </span>
                   <span className="text-text-muted text-xs hidden sm:inline">•</span>
@@ -358,7 +358,7 @@ data: {"timing": {"total_ms": 2341.1}, "strategy_used": "corrective"}`
                         <tbody className="divide-y divide-border-muted text-text-secondary">
                           {ep.params.map((p, pIdx) => (
                             <tr key={pIdx} className="hover:bg-bg-hover/20">
-                              <td className="p-3 font-semibold text-white font-mono">{p.name}</td>
+                              <td className="p-3 font-semibold text-text-primary font-mono">{p.name}</td>
                               <td className="p-3 font-mono text-[11px] text-accent-cyan">{p.type}</td>
                               <td className="p-3">
                                 {p.required ? (
@@ -382,7 +382,7 @@ data: {"timing": {"total_ms": 2341.1}, "strategy_used": "corrective"}`
                     <div className="absolute top-2 right-2 z-10">
                       <button
                         onClick={() => copyToClipboard(ep.curl, copyId)}
-                        className="p-1.5 rounded-md bg-bg-surface hover:bg-bg-hover border border-border-muted hover:border-border-light text-text-secondary hover:text-white transition-all"
+                        className="p-1.5 rounded-md bg-bg-surface hover:bg-bg-hover border border-border-muted hover:border-border-light text-text-secondary hover:text-text-primary transition-all"
                         title="Copy cURL Command"
                       >
                         {isCopied ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
@@ -422,21 +422,21 @@ data: {"timing": {"total_ms": 2341.1}, "strategy_used": "corrective"}`
               <div className="h-8 w-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-3">
                 <Globe className="h-4.5 w-4.5" />
               </div>
-              <span className="text-sm font-semibold text-white block">CORS Isolation</span>
+              <span className="text-sm font-semibold text-text-primary block">CORS Isolation</span>
               <p className="text-xs text-text-secondary mt-1 leading-relaxed m-0">Prevents Cross-Origin Resource Sharing (CORS) leaks, since browser queries are sent to origin `/api/*` and handled on the same domain.</p>
             </div>
             <div className="metric-card">
               <div className="h-8 w-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center mb-3">
                 <Server className="h-4.5 w-4.5" />
               </div>
-              <span className="text-sm font-semibold text-white block">Streaming Buffering</span>
+              <span className="text-sm font-semibold text-text-primary block">Streaming Buffering</span>
               <p className="text-xs text-text-secondary mt-1 leading-relaxed m-0">The BFF routes correctly proxy chunked Server-Sent Events (SSE) from the python backend, buffering characters smoothly to the user.</p>
             </div>
             <div className="metric-card">
               <div className="h-8 w-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-3">
                 <Cpu className="h-4.5 w-4.5" />
               </div>
-              <span className="text-sm font-semibold text-white block">Payload Normalization</span>
+              <span className="text-sm font-semibold text-text-primary block">Payload Normalization</span>
               <p className="text-xs text-text-secondary mt-1 leading-relaxed m-0">Handles file uploads via boundary parsing, ensuring clean binary piping to Python FastAPI's temporary buffers.</p>
             </div>
           </div>
@@ -473,17 +473,17 @@ data: {"timing": {"total_ms": 2341.1}, "strategy_used": "corrective"}`
               </thead>
               <tbody className="divide-y divide-border-muted text-text-secondary">
                 <tr className="hover:bg-bg-hover/20">
-                  <td className="p-3 font-semibold text-white font-mono">400 Bad Request</td>
+                  <td className="p-3 font-semibold text-text-primary font-mono">400 Bad Request</td>
                   <td className="p-3">Malformed parameters or file data.</td>
                   <td className="p-3">Triggered when attempting to delete the <code>default</code> collection, or sending invalid JSON query schemas.</td>
                 </tr>
                 <tr className="hover:bg-bg-hover/20">
-                  <td className="p-3 font-semibold text-white font-mono">404 Not Found</td>
+                  <td className="p-3 font-semibold text-text-primary font-mono">404 Not Found</td>
                   <td className="p-3">Requested resource doesn't exist.</td>
                   <td className="p-3">Fired when querying a collection name or deleting a document UUID that has not been indexed in ChromaDB.</td>
                 </tr>
                 <tr className="hover:bg-bg-hover/20">
-                  <td className="p-3 font-semibold text-white font-mono">500 Internal Error</td>
+                  <td className="p-3 font-semibold text-text-primary font-mono">500 Internal Error</td>
                   <td className="p-3">Backend processing failure.</td>
                   <td className="p-3">Occurs if the Ollama service is stopped, local CPU/GPU memory is exhausted, or ChromaDB's disk index is locked.</td>
                 </tr>

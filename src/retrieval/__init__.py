@@ -1,4 +1,4 @@
-"""Retrieval module for RAG1 — dense, sparse, hybrid, and re-ranking."""
+"""Retrieval module for Veridia RAG — dense, sparse, hybrid, and re-ranking."""
 
 from src.retrieval.dense_retriever import DenseRetriever
 from src.retrieval.hybrid_retriever import HybridRetriever

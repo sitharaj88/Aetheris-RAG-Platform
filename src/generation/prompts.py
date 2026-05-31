@@ -1,5 +1,5 @@
 """
-Prompt templates for every LLM interaction in the RAG1 system.
+Prompt templates for every LLM interaction in the Veridia RAG system.
 
 All prompts are plain format-strings. Call ``.format(...)`` with the
 appropriate keyword arguments before passing to the LLM.

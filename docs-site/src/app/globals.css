@@ -125,6 +125,14 @@ body {
   color: var(--text-primary);
 }
 
+.doc-content h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
 .doc-content p {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
@@ -201,6 +209,7 @@ body {
   border-radius: 0.5rem;
   border-left: 4px solid;
   line-height: 1.6;
+  font-size: 0.875rem;
 }
 
 .doc-alert-note {
@@ -239,6 +248,15 @@ body {
   color: #fde047;
 }
 
+.doc-alert-caution {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: #ef4444;
+  color: #dc2626;
+}
+.dark .doc-alert-caution {
+  color: #fca5a5;
+}
+
 /* Custom visual cards */
 .metric-card {
   background: var(--bg-surface);
@@ -255,4 +273,100 @@ body {
 .dark .metric-card {
   background: rgba(18, 18, 26, 0.6);
   backdrop-filter: blur(12px);
+}
+
+/* Comparison Tables */
+.doc-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+.doc-content table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-muted);
+}
+.doc-content table td {
+  padding: 0.75rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-muted);
+}
+.doc-content table tr:hover td {
+  background: var(--bg-hover);
+}
+
+/* Image Captions */
+.doc-content .image-caption {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Badge / Tag Styles */
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.doc-badge-green {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.doc-badge-amber {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.doc-badge-red {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.doc-badge-blue {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Step / Timeline Cards */
+.step-card {
+  padding: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-muted);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.step-card:hover {
+  border-color: var(--border-light);
+}
+
+.step-number {
+  flex-shrink: 0;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 0.125rem;
 }

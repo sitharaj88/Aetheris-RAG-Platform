@@ -1,4 +1,4 @@
-"""Document ingestion module for RAG1."""
+"""Document ingestion module for Veridia RAG."""
 
 from src.ingestion.chunker import (
     ChunkingStrategy,

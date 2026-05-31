@@ -12,11 +12,13 @@ import {
   ArrowRight,
   Terminal,
   FileText,
-  GitCommit,
+  Globe,
   CheckCircle2,
   RefreshCw,
   Search,
-  ExternalLink
+  ExternalLink,
+  FolderTree,
+  Zap
 } from "lucide-react";
 
 export default function ArchitecturePage() {
@@ -29,13 +31,13 @@ export default function ArchitecturePage() {
       </div>
       <h1>System Architecture & Flow Design</h1>
       <p className="text-text-secondary leading-relaxed">
-        The RAG Intelligence platform is structured as a decoupled **Option A (Hybrid Full-Stack)** architecture. This separates high-speed user interface execution from intensive machine learning model execution and vector storage.
+        The Veridia RAG platform is structured as a <strong>decoupled hybrid full-stack</strong> architecture. This design cleanly separates high-speed user interface execution from intensive machine learning model execution and vector storage, enabling independent scaling and development of each layer.
       </p>
 
       {/* HIGH-LEVEL DESIGN (HLD) DIAGRAM */}
       <h2>High-Level Design (HLD)</h2>
       <p>
-        The following processing flow illustrates how a user query moves through our hybrid retrieval and reranking pipelines to generate a self-reflective response:
+        The following processing flow illustrates how a user query moves through the hybrid retrieval and reranking pipelines to generate a self-reflective response:
       </p>
 
       <div className="my-8">
@@ -44,6 +46,61 @@ export default function ArchitecturePage() {
           alt="Veridia RAG Processing Flow Architecture Diagram" 
           className="rounded-2xl border border-border-light shadow-glow w-full max-w-3xl mx-auto"
         />
+        <p className="text-center text-xs text-text-muted mt-2 italic">High-level data processing flow — from user query to cited response</p>
+      </div>
+
+      {/* TECHNOLOGY CHOICES */}
+      <h2>Technology Choices & Rationale</h2>
+      <p>
+        Every technology in the Veridia stack was chosen for a specific engineering reason. Here's why:
+      </p>
+
+      <div className="overflow-x-auto border border-border-muted rounded-xl bg-bg-surface my-6">
+        <table className="min-w-full text-left text-xs border-collapse">
+          <thead>
+            <tr className="border-b border-border-muted bg-bg-elevated/40 text-text-secondary">
+              <th className="p-3 font-semibold">Technology</th>
+              <th className="p-3 font-semibold">Role</th>
+              <th className="p-3 font-semibold">Why This Choice?</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border-muted text-text-secondary">
+            <tr className="hover:bg-bg-hover/20">
+              <td className="p-3 font-semibold text-text-primary font-mono">FastAPI</td>
+              <td className="p-3">Backend API</td>
+              <td className="p-3">Native async support, SSE streaming, auto-generated OpenAPI docs, Pydantic integration</td>
+            </tr>
+            <tr className="hover:bg-bg-hover/20">
+              <td className="p-3 font-semibold text-text-primary font-mono">Next.js 16</td>
+              <td className="p-3">Frontend + BFF</td>
+              <td className="p-3">Server-side API routes for proxying, React 19, built-in SSE support, Turbopack bundling</td>
+            </tr>
+            <tr className="hover:bg-bg-hover/20">
+              <td className="p-3 font-semibold text-text-primary font-mono">ChromaDB</td>
+              <td className="p-3">Vector Store</td>
+              <td className="p-3">Embedded mode (no separate server), SQLite-backed persistence, zero-config setup</td>
+            </tr>
+            <tr className="hover:bg-bg-hover/20">
+              <td className="p-3 font-semibold text-text-primary font-mono">Ollama</td>
+              <td className="p-3">LLM Engine</td>
+              <td className="p-3">100% local inference, no API keys, model swapping via config, streaming support</td>
+            </tr>
+            <tr className="hover:bg-bg-hover/20">
+              <td className="p-3 font-semibold text-text-primary font-mono">SentenceTransformers</td>
+              <td className="p-3">Embeddings + Reranking</td>
+              <td className="p-3">Local bi-encoder embeddings and cross-encoder reranking without external API calls</td>
+            </tr>
+            <tr className="hover:bg-bg-hover/20">
+              <td className="p-3 font-semibold text-text-primary font-mono">rank-bm25</td>
+              <td className="p-3">Sparse Retrieval</td>
+              <td className="p-3">Lightweight Okapi BM25 implementation, captures keyword matches that vectors miss</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div className="doc-alert doc-alert-tip">
+        <strong>No Frameworks:</strong> Veridia is built without LangChain or LlamaIndex. Every component (embedder, vector store, LLM, retriever, strategy) uses abstract base classes so implementations can be swapped cleanly.
       </div>
 
       <h2>System Interface Topology</h2>
@@ -121,7 +178,7 @@ export default function ArchitecturePage() {
             {/* ChromaDB Node */}
             <div className="w-[45%] flex items-center gap-3 p-3 bg-bg-surface border border-border-muted rounded-lg shadow-sm">
               <div className="h-8 w-8 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center flex-shrink-0">
-                <Database className="h-4.5 w-4.5" />
+                <Database className="h-4 w-4" />
               </div>
               <div>
                 <span className="text-xs font-semibold text-text-primary block">ChromaDB Store</span>
@@ -132,7 +189,7 @@ export default function ArchitecturePage() {
             {/* Ollama Node */}
             <div className="w-[45%] flex items-center gap-3 p-3 bg-bg-surface border border-border-muted rounded-lg shadow-sm">
               <div className="h-8 w-8 rounded bg-orange-500/10 text-orange-400 flex items-center justify-center flex-shrink-0">
-                <Cpu className="h-4.5 w-4.5" />
+                <Cpu className="h-4 w-4" />
               </div>
               <div>
                 <span className="text-xs font-semibold text-text-primary block">Ollama LLM Engine</span>
@@ -144,10 +201,70 @@ export default function ArchitecturePage() {
         </div>
       </div>
 
+      {/* PIPELINE DIAGRAMS */}
+      <h2>Pipeline Architecture Diagrams</h2>
+      <p>
+        The following diagrams detail the internal data flow through the ingestion and retrieval pipelines:
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-8">
+        <div>
+          <img 
+            src="/images/ingestion_pipeline.png" 
+            alt="Veridia RAG Ingestion Pipeline" 
+            className="rounded-2xl border border-border-light shadow-glow w-full"
+          />
+          <p className="text-center text-xs text-text-muted mt-2 italic">Ingestion pipeline — from file upload to vector indexing</p>
+        </div>
+        <div>
+          <img 
+            src="/images/retrieval_pipeline.png" 
+            alt="Veridia RAG Retrieval Pipeline" 
+            className="rounded-2xl border border-border-light shadow-glow w-full"
+          />
+          <p className="text-center text-xs text-text-muted mt-2 italic">Retrieval pipeline — hybrid search, RRF fusion, and neural reranking</p>
+        </div>
+      </div>
+
+      {/* PROJECT STRUCTURE */}
+      <h2>Project Directory Structure</h2>
+      <p>
+        The codebase follows a clean, modular structure with abstract base classes for every swappable component:
+      </p>
+      <pre>
+        <code>{`veridia-rag/
+├── config.yaml                  # Global configuration (models, chunking, retrieval)
+├── pyproject.toml               # Project metadata & dependencies
+├── .env.example                 # Environment variable template
+├── README.md
+├── data/
+│   ├── raw/                     # Place source documents here
+│   └── chromadb/                # ChromaDB persistence (auto-created)
+├── logs/                        # Application logs (auto-created)
+├── frontend-next/               # Next.js 16 frontend & BFF proxy
+│   └── src/app/
+│       ├── page.tsx             # Chat UI (single-page app)
+│       └── api/                 # BFF proxy routes (ingest, query, health)
+├── docs-site/                   # This documentation site (Next.js static export)
+└── src/                         # Python RAG core
+    ├── pipeline.py              # Main orchestrator
+    ├── models.py                # Pydantic data models
+    ├── api/app.py               # FastAPI endpoints
+    ├── config/settings.py       # Pydantic settings (YAML + env)
+    ├── ingestion/               # Loaders, chunkers, OCR fallback
+    ├── embedding/               # SentenceTransformer embedder (ABC)
+    ├── vectorstore/             # ChromaDB implementation (ABC)
+    ├── retrieval/               # Dense, sparse, hybrid, reranker
+    ├── generation/              # Ollama LLM, prompts, response formatter
+    ├── query/                   # Rewriter, decomposer, HyDE, router
+    ├── strategies/              # Naive, CRAG, Self-RAG, Agentic, Adaptive
+    └── utils/                   # Logger, text helpers`}</code>
+      </pre>
+
       {/* LOW-LEVEL DESIGN (LLD) INTERACTIVE TAB EXPLORER */}
       <h2>Low-Level Design (LLD) & Data Flows</h2>
       <p>
-        Select a tab below to inspect how data passes step-by-step through each pipeline within the Python RAG core packages:
+        Select a tab below to inspect how data passes step-by-step through each pipeline within the Python RAG core:
       </p>
 
       {/* Tabs list */}
@@ -198,7 +315,7 @@ export default function ArchitecturePage() {
               { step: "2. Scanned OCR Fallback", module: "rapidocr-onnxruntime", details: "If extracted text length is 0, converts pages to images and extracts layout text with local ONNX models." },
               { step: "3. Document Context Injector", module: "src/ingestion/chunker.py (Contextual)", details: "Takes the first 4,000 characters of the loaded document and calls Ollama to build a 2-sentence overview summary." },
               { step: "4. Recursive Chunker Split", module: "src/ingestion/chunker.py", details: "Divides document text recursively based on character delimiters. Prepends the global summary to the start of each text block." },
-              { step: "5. Embedding & Vector Indexing", module: "src/vectorstore/chroma_store.py", details: "Embeds each contextual block with SentenceTransformers (384-dimensions) and persists them in ChromaDB collection collections." }
+              { step: "5. Embedding & Vector Indexing", module: "src/vectorstore/chroma_store.py", details: "Embeds each contextual block with SentenceTransformers (384-dimensions) and persists them in ChromaDB collections." }
             ].map((node, index) => (
               <div key={index} className="p-4 bg-bg-surface border border-border-muted rounded-xl flex items-start gap-4">
                 <div className="flex-shrink-0 h-6 w-6 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/30 flex items-center justify-center text-xs font-bold mt-1">
@@ -249,10 +366,10 @@ export default function ArchitecturePage() {
         {lldTab === "reflection" && (
           <div className="space-y-4">
             <p className="text-sm text-text-secondary">
-              Reflective strategies execute multiple checks to grade relevance and check response correctness:
+              Reflective strategies execute multiple checks to grade relevance and verify response correctness before returning to the user:
             </p>
             {[
-              { step: "1. CRAG Chunk Grading", module: "src/strategies/corrective_rag.py", details: "Checks retrieved chunks. If poor or irrelevant, discards the chunk. If overall document count is low, rewrites queries for a fallback web query search." },
+              { step: "1. CRAG Chunk Grading", module: "src/strategies/corrective_rag.py", details: "Checks retrieved chunks against the query. If poor or irrelevant, discards the chunk. If overall document count is low, rewrites queries for a fallback search." },
               { step: "2. Self-RAG Reflection", module: "src/strategies/self_rag.py", details: "Generates answer tokens, then runs a validation prompt. Grades whether the generated answer is strictly grounded in the document context." },
               { step: "3. Hallucination Guard", module: "src/generation/response.py", details: "Annotates confidence rankings. If answer grounding checks fail, appends a low-confidence banner or triggers retrieval adjustments." }
             ].map((node, index) => (
@@ -275,7 +392,7 @@ export default function ArchitecturePage() {
       </div>
 
       <div className="doc-alert doc-alert-important">
-        <strong>Decoupling Benefit:</strong> By placing this entire multi-stage LLD core in the Python FastAPI layer, the Next.js frontend has a clean and simple interface, querying only the `/api/query/stream` endpoint for SSE streams.
+        <strong>Decoupling Benefit:</strong> By placing this entire multi-stage LLD core in the Python FastAPI layer, the Next.js frontend has a clean and simple interface, querying only the <code>/api/query/stream</code> endpoint for SSE streams.
       </div>
 
       <div className="mt-8 flex justify-between">
@@ -294,27 +411,5 @@ export default function ArchitecturePage() {
         </Link>
       </div>
     </div>
-  );
-}
-
-// Simple internal icon mapper
-function Globe(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <line x1="2" x2="22" y1="12" y2="12" />
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-    </svg>
   );
 }

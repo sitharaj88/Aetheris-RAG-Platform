@@ -1,4 +1,4 @@
-"""Embedding module for RAG1."""
+"""Embedding module for Veridia RAG."""
 
 from src.embedding.base import BaseEmbedder
 from src.embedding.sentence_transformer import SentenceTransformerEmbedder

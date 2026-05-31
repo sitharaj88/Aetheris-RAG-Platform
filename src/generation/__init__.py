@@ -1,4 +1,4 @@
-"""Generation module for RAG1 — LLM interface, prompts, and response formatting."""
+"""Generation module for Veridia RAG — LLM interface, prompts, and response formatting."""
 
 from src.generation.base import BaseLLM
 from src.generation.ollama_llm import OllamaLLM

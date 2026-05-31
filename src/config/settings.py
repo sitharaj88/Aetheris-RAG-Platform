@@ -1,5 +1,5 @@
 """
-Pydantic-based settings management for the RAG1 system.
+Pydantic-based settings management for the Veridia RAG system.
 
 Loads configuration from config.yaml and environment variables,
 with env vars taking precedence. Provides a singleton pattern
@@ -85,7 +85,7 @@ class LoggingConfig(BaseModel):
     """Configuration for logging."""
 
     level: str = Field(default="INFO", description="Log level")
-    file: str = Field(default="logs/rag1.log", description="Log file path")
+    file: str = Field(default="logs/veridia.log", description="Log file path")
     rotation: str = Field(default="10 MB", description="Log rotation size")
     retention: str = Field(default="7 days", description="Log retention period")
 
@@ -120,7 +120,7 @@ def _load_yaml_config() -> dict[str, Any]:
 
 class Settings(BaseSettings):
     """
-    Root settings object for the RAG1 system.
+    Root settings object for the Veridia RAG system.
 
     Priority (highest → lowest):
         1. Environment variables / .env

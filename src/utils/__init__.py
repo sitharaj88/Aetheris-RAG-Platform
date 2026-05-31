@@ -1,4 +1,4 @@
-"""Utility modules for RAG1."""
+"""Utility modules for Veridia RAG."""
 
 from src.utils.logger import get_logger, timed
 from src.utils.text import cosine_similarity, simple_tokenize, token_count, truncate_text

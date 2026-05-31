@@ -1,5 +1,5 @@
 """
-Text processing helpers used throughout the RAG1 system.
+Text processing helpers used throughout the Veridia RAG system.
 
 Includes tokenisation for BM25, cosine similarity, approximate
 token counting, and text truncation utilities.

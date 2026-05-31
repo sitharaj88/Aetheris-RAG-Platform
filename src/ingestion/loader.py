@@ -1,5 +1,5 @@
 """
-Multi-format document loader for the RAG1 system.
+Multi-format document loader for the Veridia RAG system.
 
 Supports PDF, DOCX, Markdown, plain text, and source code files.
 Each loader returns a list of ``Document`` objects enriched with

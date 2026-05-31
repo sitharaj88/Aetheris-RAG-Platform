@@ -64,7 +64,7 @@ User Query
 
 ```bash
 # Clone and enter the project
-cd rag1
+cd veridia-rag
 
 # Create virtual environment
 python -m venv .venv
@@ -146,7 +146,7 @@ print(response.timing)
 ## Project Structure
 
 ```
-rag1/
+veridia-rag/
 ├── config.yaml                  # Default configuration
 ├── pyproject.toml               # Project metadata & dependencies
 ├── .env.example                 # Environment variable template

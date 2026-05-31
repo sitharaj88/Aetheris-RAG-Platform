@@ -1,5 +1,5 @@
 """
-Chunking strategies for the RAG1 ingestion pipeline.
+Chunking strategies for the Veridia RAG ingestion pipeline.
 
 Provides four strategies accessible via the ``get_chunker`` factory:
 

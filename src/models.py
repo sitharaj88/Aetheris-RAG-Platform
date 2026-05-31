@@ -1,5 +1,5 @@
 """
-Core data models for the RAG1 system.
+Core data models for the Veridia RAG system.
 
 All data structures flowing through the pipeline are defined here
 as immutable Pydantic models to ensure validation and serialisation.

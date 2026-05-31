@@ -5,12 +5,16 @@ import {
   Terminal, 
   ArrowRight, 
   CheckCircle, 
-  Database, 
-  Cpu, 
-  Code,
-  Shield,
-  Layers,
-  Settings
+  Hammer,
+  HardDrive,
+  Blocks,
+  LayoutDashboard,
+  FileInput,
+  Search,
+  GitFork,
+  BookOpen,
+  Wrench,
+  FolderTree
 } from "lucide-react";
 
 export default function Home() {
@@ -25,8 +29,96 @@ export default function Home() {
     { name: "RapidOCR", desc: "Local ONNX OCR parser fallback to extract text from scanned, image-based PDFs.", category: "Ingestion" },
   ];
 
+  const navCards = [
+    { 
+      icon: <LayoutDashboard className="h-5 w-5" />, 
+      title: "Architecture", 
+      desc: "HLD/LLD system topology, data flows, and interface diagrams.", 
+      href: "/architecture/",
+      color: "text-indigo-400",
+      bg: "bg-indigo-500/10",
+      border: "border-indigo-500/20"
+    },
+    { 
+      icon: <FileInput className="h-5 w-5" />, 
+      title: "Ingestion & Chunking", 
+      desc: "PDF/DOCX parsing, OCR fallback, and contextual chunk strategies.", 
+      href: "/chunking/",
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+      border: "border-emerald-500/20"
+    },
+    { 
+      icon: <Search className="h-5 w-5" />, 
+      title: "Retrieval & Reranking", 
+      desc: "Hybrid dense-sparse fusion, RRF formulas, and cross-encoder scoring.", 
+      href: "/retrieval/",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10",
+      border: "border-cyan-500/20"
+    },
+    { 
+      icon: <GitFork className="h-5 w-5" />, 
+      title: "RAG Strategies", 
+      desc: "Naive, CRAG, Self-RAG, and Multi-Hop agentic routing loops.", 
+      href: "/strategies/",
+      color: "text-purple-400",
+      bg: "bg-purple-500/10",
+      border: "border-purple-500/20"
+    },
+    { 
+      icon: <BookOpen className="h-5 w-5" />, 
+      title: "API Reference", 
+      desc: "Full endpoint spec — query, ingest, stream, and collection routes.", 
+      href: "/api-reference/",
+      color: "text-orange-400",
+      bg: "bg-orange-500/10",
+      border: "border-orange-500/20"
+    },
+    { 
+      icon: <Wrench className="h-5 w-5" />, 
+      title: "Setup & Install", 
+      desc: "Environment setup, config.yaml reference, and troubleshooting.", 
+      href: "/setup/",
+      color: "text-rose-400",
+      bg: "bg-rose-500/10",
+      border: "border-rose-500/20"
+    },
+  ];
+
+  const differentiators = [
+    {
+      icon: <Hammer className="h-6 w-6" />,
+      title: "No LangChain. No LlamaIndex.",
+      subtitle: "100% hand-built from scratch",
+      description: "Every component — from the recursive chunker to the hybrid retriever to the self-reflective generation loop — is written from first principles. No opaque framework abstractions. You can read, understand, and modify every line of the pipeline.",
+      color: "text-amber-400",
+      bg: "bg-amber-500/10",
+      border: "border-amber-500/20"
+    },
+    {
+      icon: <HardDrive className="h-6 w-6" />,
+      title: "Local-First Architecture",
+      subtitle: "Runs entirely on your machine",
+      description: "All inference happens through Ollama. All embeddings are computed locally with SentenceTransformers. All vectors are stored in a local ChromaDB instance. No API keys, no cloud bills, no data leaving your network.",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10",
+      border: "border-cyan-500/20"
+    },
+    {
+      icon: <Blocks className="h-6 w-6" />,
+      title: "Production-Grade Abstractions",
+      subtitle: "ABC interfaces, lazy init, Pydantic validation",
+      description: "Every retriever, chunker, and strategy implements a formal ABC interface. Models use lazy initialization for memory efficiency. All API I/O is validated through Pydantic schemas. The codebase is designed to be extended, not forked.",
+      color: "text-violet-400",
+      bg: "bg-violet-500/10",
+      border: "border-violet-500/20"
+    }
+  ];
+
   return (
     <div>
+      {/* Hero Section */}
       <div className="flex items-center gap-2 mb-2 text-accent-cyan text-sm font-semibold tracking-wider uppercase">
         <Sparkles className="h-4 w-4" /> Technical Documentation
       </div>
@@ -35,21 +127,77 @@ export default function Home() {
         Welcome to the technical documentation site for Veridia RAG — a state-of-the-art, local-first Retrieval-Augmented Generation system, co-designed and engineered by the Antigravity Coding Agent. This documentation covers the architecture, strategies, mathematical formulations, and step-by-step procedures powering the application.
       </p>
 
+      <div className="doc-alert doc-alert-note">
+        <strong>What is Veridia?</strong> A fully open-source RAG platform that combines contextual chunking, hybrid dense-sparse retrieval, cross-encoder reranking, and self-reflective generation — all running locally with Ollama. No cloud dependencies. No API keys. No framework lock-in.
+      </div>
+
+      {/* ──────────────────────────────────────────────── */}
+      {/* WHY VERIDIA? */}
+      {/* ──────────────────────────────────────────────── */}
+      <h2>Why Veridia?</h2>
+      <p>
+        Most RAG tutorials wrap LangChain calls around OpenAI endpoints and call it a day. Veridia takes a fundamentally different approach — every component is built from scratch with production patterns, and the entire system runs on your local hardware.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 my-6">
+        {differentiators.map((d) => (
+          <div key={d.title} className="metric-card flex flex-col">
+            <div className={`h-11 w-11 rounded-xl ${d.bg} ${d.color} border ${d.border} flex items-center justify-center mb-4`}>
+              {d.icon}
+            </div>
+            <h3 className="text-text-primary text-base font-bold mt-0 mb-0.5">{d.title}</h3>
+            <span className="text-xs font-mono text-accent-cyan mb-2">{d.subtitle}</span>
+            <p className="text-xs text-text-secondary m-0 leading-relaxed flex-grow">{d.description}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ──────────────────────────────────────────────── */}
+      {/* TECHNOLOGICAL STACK */}
+      {/* ──────────────────────────────────────────────── */}
       <h2>Technological Stack</h2>
       <p>
-        The platform decouples the ingestion pipeline and local ML execution from the chat interface using a hybrid Next.js + Python FastAPI design.
+        The platform decouples the ingestion pipeline and local ML execution from the chat interface using a hybrid Next.js + Python FastAPI design. Each technology was chosen for a specific reason — no unnecessary dependencies.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
         {stack.map((tech) => (
           <div key={tech.name} className="metric-card">
             <span className="text-[10px] text-accent-cyan font-mono uppercase font-bold tracking-wider">{tech.category}</span>
-            <h3 className="text-white text-base font-semibold mt-1 mb-2">{tech.name}</h3>
+            <h3 className="text-text-primary text-base font-semibold mt-1 mb-2">{tech.name}</h3>
             <p className="text-xs text-text-secondary m-0 leading-relaxed">{tech.desc}</p>
           </div>
         ))}
       </div>
 
+      {/* ──────────────────────────────────────────────── */}
+      {/* QUICK NAVIGATION */}
+      {/* ──────────────────────────────────────────────── */}
+      <h2>Quick Navigation</h2>
+      <p>
+        Jump to any section of the documentation. Each page provides deep dives into implementation details, mathematical formulations, code references, and configuration options.
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 my-6">
+        {navCards.map((card) => (
+          <Link key={card.title} href={card.href} className="group no-underline">
+            <div className="metric-card h-full flex flex-col">
+              <div className={`h-10 w-10 rounded-lg ${card.bg} ${card.color} border ${card.border} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                {card.icon}
+              </div>
+              <h3 className="text-text-primary text-sm font-bold mt-0 mb-1 group-hover:text-accent-cyan transition-colors">{card.title}</h3>
+              <p className="text-xs text-text-secondary m-0 leading-relaxed flex-grow">{card.desc}</p>
+              <span className="text-[11px] text-accent-cyan font-medium mt-3 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                Read more <ArrowRight className="h-3 w-3" />
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* ──────────────────────────────────────────────── */}
+      {/* CORE TECHNIQUES */}
+      {/* ──────────────────────────────────────────────── */}
       <h2>Core Techniques Implemented</h2>
       <p>
         Veridia RAG Platform moves beyond standard vector matching to solve real-world context constraints and hallucinations:
@@ -88,16 +236,60 @@ export default function Home() {
         </li>
       </ul>
 
+      {/* ──────────────────────────────────────────────── */}
+      {/* PROJECT STRUCTURE */}
+      {/* ──────────────────────────────────────────────── */}
+      <h2>Project Directory Structure</h2>
+      <p>
+        The repository is organized into clear, purpose-driven directories. The Python <code>src/</code> directory contains the RAG core, while <code>frontend-next/</code> houses the Next.js chat interface.
+      </p>
+
+      <pre>
+        <code>{`veridia-rag/
+├── config.yaml                  # Global configuration (models, chunking, retrieval)
+├── .env.example                 # Environment variable template
+├── pyproject.toml               # Python project definition & dependencies
+│
+├── src/                         # ── Python RAG Core ──
+│   ├── api/                     # FastAPI route handlers (ingest, query, stream)
+│   ├── config/                  # Pydantic settings loader & YAML parser
+│   ├── embedding/               # SentenceTransformer embedding service
+│   ├── generation/              # Ollama LLM client & response builder
+│   ├── ingestion/               # Document loaders, OCR fallback, chunkers
+│   ├── models.py                # Pydantic schemas (Chunk, QueryResult, etc.)
+│   ├── pipeline.py              # Main RAG orchestrator (ties all stages)
+│   ├── query/                   # Multi-query rewriter & query analyzer
+│   ├── retrieval/               # Dense, sparse, hybrid retrievers & reranker
+│   ├── strategies/              # Naive, CRAG, Self-RAG, Multi-Hop strategies
+│   ├── utils/                   # Logging, timing, and helper utilities
+│   └── vectorstore/             # ChromaDB adapter with lazy initialization
+│
+├── frontend-next/               # ── Next.js 16 Chat Interface ──
+│   ├── src/app/                 # App Router pages & API route handlers
+│   ├── src/components/          # React chat UI, citation viewer, sidebar
+│   └── tailwind.config.ts       # Tailwind v4 design token configuration
+│
+├── docs-site/                   # ── This Documentation Site ──
+│   └── src/app/                 # Next.js pages for each doc section
+│
+├── .github/workflows/           # CI/CD GitHub Actions (lint, test, deploy)
+├── test_e2e_api.py              # End-to-end API integration tests
+└── test_diagnostic.py           # Model & connectivity diagnostic tests`}</code>
+      </pre>
+
       <div className="doc-alert doc-alert-tip">
         <strong>Quick Tip:</strong> Select the menu options in the left sidebar to explore the exact file pathways, configuration overrides, mathematical formulas, and CI/CD manual workflow scripts.
       </div>
 
+      {/* ──────────────────────────────────────────────── */}
+      {/* NAVIGATION */}
+      {/* ──────────────────────────────────────────────── */}
       <div className="mt-8 flex justify-end">
         <Link 
-          href="/setup/" 
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-accent-start to-accent-end text-white font-medium hover:shadow-glow transition-all"
+          href="/architecture/" 
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-accent-start to-accent-end text-text-primary font-medium hover:shadow-glow transition-all"
         >
-          <span>Get Started with Setup</span>
+          <span>Get Started — Architecture Overview</span>
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

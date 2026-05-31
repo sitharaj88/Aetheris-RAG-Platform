@@ -1,5 +1,5 @@
 """
-Loguru-based structured logging for the RAG1 system.
+Loguru-based structured logging for the Veridia RAG system.
 
 Provides module-specific loggers, a performance-timing decorator,
 and one-time global configuration.
@@ -20,7 +20,7 @@ _CONFIGURED = False
 
 def setup_logging(
     level: str = "INFO",
-    log_file: str = "logs/rag1.log",
+    log_file: str = "logs/veridia.log",
     rotation: str = "10 MB",
     retention: str = "7 days",
 ) -> None:

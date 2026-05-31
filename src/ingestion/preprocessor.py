@@ -1,5 +1,5 @@
 """
-Text preprocessing for the RAG1 ingestion pipeline.
+Text preprocessing for the Veridia RAG ingestion pipeline.
 
 Cleans raw document text, extracts lightweight metadata, and
 normalises content before chunking.

@@ -1,4 +1,4 @@
-"""Vector store module for RAG1."""
+"""Vector store module for Veridia RAG."""
 
 from src.vectorstore.base import BaseVectorStore
 from src.vectorstore.chroma_store import ChromaVectorStore

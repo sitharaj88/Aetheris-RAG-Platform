@@ -24,7 +24,7 @@ logger = logging.getLogger("rag.api")
 
 # ── Paths ────────────────────────────────────────────────────────────────────
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # rag1/
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent  # veridia/
 WEB_DIR = PROJECT_ROOT / "web"
 
 # ── Lifespan ─────────────────────────────────────────────────────────────────

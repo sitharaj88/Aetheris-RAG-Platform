@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RAG Intelligence Documentation | SOTA AI Knowledge Base",
-  description: "Deep-dive technical documentation for the RAG Intelligence platform, covering advanced chunking (Contextual, Semantic), hybrid retrieval (dense/sparse RRF), cross-encoder reranking, and self-reflective RAG strategies.",
+  title: "Veridia RAG Platform — Technical Documentation",
+  description: "Deep-dive technical documentation for the Veridia RAG platform — a production-grade, local-first Retrieval-Augmented Generation system with contextual chunking, dense-sparse hybrid retrieval (RRF), cross-encoder reranking, and self-reflective RAG strategies.",
 };
 
 export default function RootLayout({

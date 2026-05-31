@@ -8,7 +8,6 @@ import {
   Cpu, 
   Layers, 
   Terminal, 
-  ArrowRight, 
   Menu, 
   X, 
   ChevronRight, 
@@ -18,7 +17,9 @@ import {
   Sun, 
   Moon,
   ExternalLink,
-  Code
+  Code,
+  Activity,
+  Monitor
 } from "lucide-react";
 
 interface SidebarItem {
@@ -38,11 +39,13 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     { id: "overview", path: "/", title: "Introduction & Stack", category: "Getting Started", icon: <BookOpen className="h-4 w-4" /> },
     { id: "setup", path: "/setup/", title: "Setup & Configuration", category: "Getting Started", icon: <Terminal className="h-4 w-4" /> },
     { id: "architecture", path: "/architecture/", title: "System Architecture", category: "Core Design", icon: <Cpu className="h-4 w-4" /> },
-    { id: "api-reference", path: "/api-reference/", title: "REST API Reference", category: "Core Design", icon: <Code className="h-4 w-4" /> },
-    { id: "chunking", path: "/chunking/", title: "Ingestion & Chunker", category: "Pipeline Details", icon: <FileText className="h-4 w-4" /> },
+    { id: "chunking", path: "/chunking/", title: "Ingestion & Chunking", category: "Pipeline Details", icon: <FileText className="h-4 w-4" /> },
     { id: "retrieval", path: "/retrieval/", title: "Hybrid Search & Reranking", category: "Pipeline Details", icon: <Layers className="h-4 w-4" /> },
-    { id: "strategies", path: "/strategies/", title: "Reasoning & Reflection", category: "Intelligence", icon: <Sparkles className="h-4 w-4" /> },
-    { id: "workflow", path: "/workflow/", title: "Manual CI/CD Workflow", category: "Deployment", icon: <RefreshCw className="h-4 w-4" /> },
+    { id: "strategies", path: "/strategies/", title: "RAG Strategies", category: "Intelligence", icon: <Sparkles className="h-4 w-4" /> },
+    { id: "observability", path: "/observability/", title: "Observability & Tracing", category: "Intelligence", icon: <Activity className="h-4 w-4" /> },
+    { id: "frontend", path: "/frontend/", title: "Frontend & Chat UI", category: "Application", icon: <Monitor className="h-4 w-4" /> },
+    { id: "api-reference", path: "/api-reference/", title: "REST API Reference", category: "Application", icon: <Code className="h-4 w-4" /> },
+    { id: "workflow", path: "/workflow/", title: "CI/CD & Deployment", category: "Deployment", icon: <RefreshCw className="h-4 w-4" /> },
   ];
 
   // Load and apply theme on mount
@@ -90,7 +93,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
         <div className="flex h-16 items-center justify-between px-6 border-b border-border-muted flex-shrink-0">
-          <div className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 no-underline">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-accent-start to-accent-end shadow-glow">
               <BookOpen className="h-5 w-5 text-white" />
             </div>
@@ -98,7 +101,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
               <span className="font-bold tracking-tight text-text-primary block">Veridia Docs</span>
               <span className="text-[10px] text-accent-cyan font-mono block">v2.1.0 • Technical</span>
             </div>
-          </div>
+          </Link>
           <button 
             onClick={() => setSidebarOpen(false)}
             className="md:hidden p-1.5 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-hover transition-colors"
@@ -109,7 +112,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
 
         {/* Sidebar Nav */}
         <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-          {["Getting Started", "Core Design", "Pipeline Details", "Intelligence", "Deployment"].map((category) => {
+          {["Getting Started", "Core Design", "Pipeline Details", "Intelligence", "Application", "Deployment"].map((category) => {
             const categoryItems = menuItems.filter(item => item.category === category);
             if (categoryItems.length === 0) return null;
 
@@ -143,8 +146,20 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           })}
         </nav>
 
-        {/* Sidebar Footer Link to App */}
-        <div className="p-4 border-t border-border-muted flex-shrink-0">
+        {/* Sidebar Footer */}
+        <div className="p-4 border-t border-border-muted flex-shrink-0 space-y-2">
+          <a
+            href="https://github.com/sitharaj88/Veridia-RAG-Platform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between w-full p-2.5 bg-bg-elevated hover:bg-bg-hover rounded-lg border border-border-muted transition-all group"
+          >
+            <div className="flex items-center gap-2">
+              <Code className="h-4 w-4 text-text-secondary group-hover:text-text-primary transition-colors" />
+              <span className="text-xs font-medium text-text-secondary group-hover:text-text-primary">GitHub Repository</span>
+            </div>
+            <ExternalLink className="h-3.5 w-3.5 text-text-muted group-hover:text-accent-cyan transition-colors" />
+          </a>
           <a
             href="http://localhost:3000"
             target="_blank"
@@ -173,8 +188,8 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
               <Menu className="h-6 w-6" />
             </button>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-bg-elevated text-text-secondary border border-border-light font-mono">BFF Option A</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-accent-start/10 text-accent-cyan border border-border-accent/30 font-mono">Tailwind v4</span>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-bg-elevated text-text-secondary border border-border-light font-mono">Veridia RAG</span>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-accent-start/10 text-accent-cyan border border-border-accent/30 font-mono">Next.js 16 + FastAPI</span>
             </div>
           </div>
           

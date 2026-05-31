@@ -307,6 +307,51 @@ export default function Home() {
       </div>
 
       {/* ──────────────────────────────────────────────── */}
+      {/* AUTHOR & LICENSE */}
+      {/* ──────────────────────────────────────────────── */}
+      <h2>Author & License</h2>
+      <p>
+        Veridia RAG Platform is designed, developed, and maintained by **Ajithkumar Sitharaj**. Feel free to connect, contribute, or support the project.
+      </p>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+        <div className="metric-card flex flex-col justify-between">
+          <div>
+            <h3 className="text-text-primary text-base font-bold mt-0 mb-2">Ajithkumar Sitharaj</h3>
+            <p className="text-xs text-text-secondary m-0 leading-relaxed mb-4">
+              Creator and Lead Developer of Veridia RAG. Specializing in AI/RAG system architecture, backend engineering, and local-first machine learning pipelines.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-border-light pt-3 mt-auto">
+            <a href="https://sitharaj.in" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-accent-cyan hover:text-accent-start transition-colors no-underline">
+              Website
+            </a>
+            <a href="https://github.com/sitharaj88" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-accent-cyan hover:text-accent-start transition-colors no-underline">
+              GitHub
+            </a>
+            <a href="https://linkedin.com/in/sitharaj08" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-accent-cyan hover:text-accent-start transition-colors no-underline">
+              LinkedIn
+            </a>
+            <a href="https://buymeacoffee.com/stharaj08" target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-accent-cyan hover:text-accent-start transition-colors no-underline">
+              Buy Me A Coffee
+            </a>
+          </div>
+        </div>
+
+        <div className="metric-card flex flex-col justify-between">
+          <div>
+            <h3 className="text-text-primary text-base font-bold mt-0 mb-2">MIT License</h3>
+            <p className="text-xs text-text-secondary m-0 leading-relaxed mb-4">
+              This platform is open-source and licensed under the permissive MIT License. You are free to modify, distribute, and use it for commercial and private purposes, provided the original copyright notice is retained.
+            </p>
+          </div>
+          <div className="border-t border-border-light pt-3 mt-auto">
+            <span className="text-[10px] font-mono text-text-muted">Copyright &copy; 2026 Ajithkumar Sitharaj</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ──────────────────────────────────────────────── */}
       {/* NAVIGATION */}
       {/* ──────────────────────────────────────────────── */}
       <div className="mt-8 flex justify-end">

@@ -74,12 +74,6 @@ export default function WorkflowPage() {
 
 on:
   workflow_dispatch: # Enable manual trigger from the GitHub Actions tab
-  push:
-    branches:
-      - main
-    paths:
-      - 'docs-site/**'
-      - '.github/workflows/deploy-docs.yml'
 
 permissions:
   contents: read

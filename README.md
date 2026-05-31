@@ -218,6 +218,15 @@ veridia-rag/
 - **Reciprocal Rank Fusion**: Combines dense and sparse retrieval without score normalisation issues
 - **Persistent BM25**: Index saved to disk, rebuilt only after ingestion
 
+## Author & Contact
+
+Developed and maintained by **Ajithkumar Sitharaj**:
+
+* **Website**: [sitharaj.in](https://sitharaj.in)
+* **GitHub**: [@sitharaj88](https://github.com/sitharaj88)
+* **LinkedIn**: [sitharaj08](https://linkedin.com/in/sitharaj08)
+* **Buy Me A Coffee**: [stharaj08](https://buymeacoffee.com/stharaj08)
+
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

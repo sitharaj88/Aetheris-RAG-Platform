@@ -220,7 +220,7 @@ veridia-rag/
 
 ## Author & Contact
 
-Developed and maintained by **Ajithkumar Sitharaj**:
+Developed and maintained by **Sitharaj Seenivasan**:
 
 * **Website**: [sitharaj.in](https://sitharaj.in)
 * **GitHub**: [@sitharaj88](https://github.com/sitharaj88)

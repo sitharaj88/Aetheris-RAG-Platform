@@ -311,13 +311,13 @@ export default function Home() {
       {/* ──────────────────────────────────────────────── */}
       <h2>Author & License</h2>
       <p>
-        Veridia RAG Platform is designed, developed, and maintained by **Ajithkumar Sitharaj**. Feel free to connect, contribute, or support the project.
+        Veridia RAG Platform is designed, developed, and maintained by **Sitharaj Seenivasan**. Feel free to connect, contribute, or support the project.
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
         <div className="metric-card flex flex-col justify-between">
           <div>
-            <h3 className="text-text-primary text-base font-bold mt-0 mb-2">Ajithkumar Sitharaj</h3>
+            <h3 className="text-text-primary text-base font-bold mt-0 mb-2">Sitharaj Seenivasan</h3>
             <p className="text-xs text-text-secondary m-0 leading-relaxed mb-4">
               Creator and Lead Developer of Veridia RAG. Specializing in AI/RAG system architecture, backend engineering, and local-first machine learning pipelines.
             </p>
@@ -346,7 +346,7 @@ export default function Home() {
             </p>
           </div>
           <div className="border-t border-border-light pt-3 mt-auto">
-            <span className="text-[10px] font-mono text-text-muted">Copyright &copy; 2026 Ajithkumar Sitharaj</span>
+            <span className="text-[10px] font-mono text-text-muted">Copyright &copy; 2026 Sitharaj Seenivasan</span>
           </div>
         </div>
       </div>

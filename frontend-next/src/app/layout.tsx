@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Aletheia RAG Platform | AI-Powered Knowledge Base",
+  title: "Veridia RAG Platform | AI-Powered Knowledge Base",
   description: "Advanced retrieval-augmented generation engine with observability tracing, contextual chunking, and multiple reflection strategies.",
 };
 
@@ -28,7 +28,7 @@ export default function RootLayout({
   const themeScript = `
     (function() {
       try {
-        var theme = localStorage.getItem('aletheia-theme');
+        var theme = localStorage.getItem('veridia-theme');
         if (theme === 'light' || theme === 'dark') {
           document.documentElement.setAttribute('data-theme', theme);
         } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {

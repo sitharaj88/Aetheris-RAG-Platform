@@ -60,7 +60,7 @@ def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
     app = FastAPI(
         title="Veridia RAG Platform",
-        description="AI-Powered Knowledge Base with advanced RAG strategies, co-designed by Antigravity Coding Agent",
+        description="AI-Powered Knowledge Base with advanced RAG strategies",
         version="1.0.0",
         lifespan=lifespan,
         docs_url="/docs",

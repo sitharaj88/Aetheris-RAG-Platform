@@ -76,7 +76,6 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   };
 
   const isRouteActive = (itemPath: string) => {
-    // Exact match or active subpath check
     if (itemPath === "/") {
       return pathname === "/" || pathname === "";
     }
@@ -84,22 +83,26 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-bg-deep text-text-primary transition-colors duration-200">
+    <div className="flex h-screen overflow-hidden bg-bg-deep text-text-primary transition-colors duration-300 relative">
       
+      {/* Background glow effects */}
+      <div className="glow-blob w-[500px] h-[500px] bg-accent-start -top-40 -right-40" />
+      <div className="glow-blob w-[600px] h-[600px] bg-accent-cyan -bottom-60 -left-60" />
+
       {/* Left Sidebar */}
       <aside className={`
-        fixed inset-y-0 left-0 z-40 w-72 h-full bg-bg-surface border-r border-border-muted flex flex-col transition-transform duration-300 ease-in-out
+        fixed inset-y-0 left-0 z-40 w-72 h-full bg-bg-surface/75 backdrop-blur-xl border-r border-border-light flex flex-col transition-all duration-300 ease-in-out
         md:translate-x-0 md:static md:flex
-        ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+        ${sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"}
       `}>
-        <div className="flex h-16 items-center justify-between px-6 border-b border-border-muted flex-shrink-0">
-          <Link href="/" className="flex items-center gap-2 no-underline">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-accent-start to-accent-end shadow-glow">
+        <div className="flex h-16 items-center justify-between px-6 border-b border-border-light flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2.5 no-underline group">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-accent-start to-accent-end shadow-md shadow-accent-start/15 group-hover:scale-105 transition-transform duration-200">
               <BookOpen className="h-5 w-5 text-white" />
             </div>
             <div>
-              <span className="font-bold tracking-tight text-text-primary block">Veridia Docs</span>
-              <span className="text-[10px] text-accent-cyan font-mono block">v2.1.0 • Technical</span>
+              <span className="font-extrabold tracking-tight bg-gradient-to-r from-accent-start via-accent-start to-accent-cyan bg-clip-text text-transparent block text-sm">Veridia Docs</span>
+              <span className="text-[9px] text-accent-cyan font-mono block tracking-wider uppercase font-semibold">v2.1.0 • Technical</span>
             </div>
           </Link>
           <button 
@@ -111,14 +114,14 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Sidebar Nav */}
-        <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
+        <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-6 scrollbar-thin">
           {["Getting Started", "Core Design", "Pipeline Details", "Intelligence", "Application", "Deployment"].map((category) => {
             const categoryItems = menuItems.filter(item => item.category === category);
             if (categoryItems.length === 0) return null;
 
             return (
               <div key={category} className="space-y-1">
-                <h4 className="px-3 text-xs font-semibold text-text-muted uppercase tracking-wider">
+                <h4 className="px-3 text-[10px] font-bold text-text-muted uppercase tracking-wider">
                   {category}
                 </h4>
                 {categoryItems.map((item) => {
@@ -129,15 +132,15 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                       href={item.path}
                       onClick={() => setSidebarOpen(false)}
                       className={`
-                        w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200
+                        w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-xl transition-all duration-200 group/item
                         ${active 
-                          ? "bg-gradient-to-r from-accent-start/20 to-accent-end/10 text-text-primary border-l-2 border-accent-start pl-2.5 shadow-glow" 
-                          : "text-text-secondary hover:text-text-primary hover:bg-bg-hover"}
+                          ? "bg-gradient-to-r from-accent-start/15 via-accent-start/5 to-transparent text-text-primary border-l-2 border-accent-start pl-2.5 shadow-sm" 
+                          : "text-text-secondary hover:text-text-primary hover:bg-bg-hover hover:translate-x-0.5"}
                       `}
                     >
-                      <span className={active ? "text-accent-cyan" : "text-text-secondary"}>{item.icon}</span>
-                      <span>{item.title}</span>
-                      {active && <ChevronRight className="ml-auto h-3.5 w-3.5 text-accent-cyan" />}
+                      <span className={`transition-colors duration-200 ${active ? "text-accent-cyan" : "text-text-secondary group-hover/item:text-accent-start"}`}>{item.icon}</span>
+                      <span className="transition-colors duration-200">{item.title}</span>
+                      {active && <ChevronRight className="ml-auto h-3.5 w-3.5 text-accent-cyan animate-pulse" />}
                     </Link>
                   );
                 })}
@@ -147,16 +150,16 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="p-4 border-t border-border-muted flex-shrink-0 space-y-2">
+        <div className="p-4 border-t border-border-light flex-shrink-0 space-y-2 bg-bg-deep/30">
           <a
             href="https://github.com/sitharaj88/Veridia-RAG-Platform"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between w-full p-2.5 bg-bg-elevated hover:bg-bg-hover rounded-lg border border-border-muted transition-all group"
+            className="flex items-center justify-between w-full p-2.5 bg-bg-elevated/40 hover:bg-bg-hover/80 rounded-xl border border-border-light transition-all duration-200 group"
           >
             <div className="flex items-center gap-2">
-              <Code className="h-4 w-4 text-text-secondary group-hover:text-text-primary transition-colors" />
-              <span className="text-xs font-medium text-text-secondary group-hover:text-text-primary">GitHub Repository</span>
+              <Code className="h-4 w-4 text-text-secondary group-hover:text-accent-start transition-colors" />
+              <span className="text-xs font-semibold text-text-secondary group-hover:text-text-primary transition-colors">GitHub Repository</span>
             </div>
             <ExternalLink className="h-3.5 w-3.5 text-text-muted group-hover:text-accent-cyan transition-colors" />
           </a>
@@ -164,11 +167,11 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             href="http://localhost:3000"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between w-full p-2.5 bg-bg-elevated hover:bg-bg-hover rounded-lg border border-border-muted transition-all group"
+            className="flex items-center justify-between w-full p-2.5 bg-bg-elevated/40 hover:bg-bg-hover/80 rounded-xl border border-border-light transition-all duration-200 group"
           >
             <div className="flex items-center gap-2">
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              <span className="text-xs font-medium text-text-secondary group-hover:text-text-primary">Launch Chat UI</span>
+              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping"></div>
+              <span className="text-xs font-semibold text-text-secondary group-hover:text-text-primary transition-colors">Launch Chat UI</span>
             </div>
             <ExternalLink className="h-3.5 w-3.5 text-text-muted group-hover:text-accent-cyan transition-colors" />
           </a>
@@ -176,10 +179,10 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       </aside>
 
       {/* Main Panel */}
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden relative z-10">
         
         {/* Top Navbar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between px-6 bg-bg-deep/80 border-b border-border-muted backdrop-blur-md md:px-12 flex-shrink-0">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between px-6 bg-bg-deep/60 border-b border-border-light backdrop-blur-lg md:px-12 flex-shrink-0">
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setSidebarOpen(true)}
@@ -188,15 +191,15 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
               <Menu className="h-6 w-6" />
             </button>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-bg-elevated text-text-secondary border border-border-light font-mono">Veridia RAG</span>
-              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-accent-start/10 text-accent-cyan border border-border-accent/30 font-mono">Next.js 16 + FastAPI</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-bg-elevated text-text-secondary border border-border-light font-mono">Veridia RAG</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-accent-start/8 text-accent-cyan border border-border-accent/30 font-mono">Next.js 16 + FastAPI</span>
             </div>
           </div>
           
           <div className="flex items-center gap-4">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-bg-hover border border-border-muted transition-colors"
+              className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-bg-hover border border-border-light transition-all duration-200"
               title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
             >
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
@@ -205,7 +208,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         </header>
 
         {/* Content Box */}
-        <main className="flex-1 overflow-y-auto px-6 py-10 md:px-12 max-w-4xl w-full mx-auto doc-content">
+        <main className="flex-1 overflow-y-auto px-6 py-10 md:px-12 max-w-4xl w-full mx-auto doc-content scrollbar-thin">
           {children}
         </main>
       </div>

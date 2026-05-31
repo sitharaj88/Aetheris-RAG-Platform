@@ -71,18 +71,18 @@ export default function Home() {
       title: "API Reference", 
       desc: "Full endpoint spec — query, ingest, stream, and collection routes.", 
       href: "/api-reference/",
-      color: "text-orange-400",
-      bg: "bg-orange-500/10",
-      border: "border-orange-500/20"
+      color: "text-rose-400",
+      bg: "bg-rose-500/10",
+      border: "border-rose-500/20"
     },
     { 
       icon: <Wrench className="h-5 w-5" />, 
       title: "Setup & Install", 
       desc: "Environment setup, config.yaml reference, and troubleshooting.", 
       href: "/setup/",
-      color: "text-rose-400",
-      bg: "bg-rose-500/10",
-      border: "border-rose-500/20"
+      color: "text-amber-400",
+      bg: "bg-amber-500/10",
+      border: "border-amber-500/20"
     },
   ];
 
@@ -92,9 +92,9 @@ export default function Home() {
       title: "No LangChain. No LlamaIndex.",
       subtitle: "100% hand-built from scratch",
       description: "Every component — from the recursive chunker to the hybrid retriever to the self-reflective generation loop — is written from first principles. No opaque framework abstractions. You can read, understand, and modify every line of the pipeline.",
-      color: "text-amber-400",
-      bg: "bg-amber-500/10",
-      border: "border-amber-500/20"
+      color: "text-violet-400",
+      bg: "bg-violet-500/10",
+      border: "border-violet-500/20"
     },
     {
       icon: <HardDrive className="h-6 w-6" />,
@@ -110,22 +110,47 @@ export default function Home() {
       title: "Production-Grade Abstractions",
       subtitle: "ABC interfaces, lazy init, Pydantic validation",
       description: "Every retriever, chunker, and strategy implements a formal ABC interface. Models use lazy initialization for memory efficiency. All API I/O is validated through Pydantic schemas. The codebase is designed to be extended, not forked.",
-      color: "text-violet-400",
-      bg: "bg-violet-500/10",
-      border: "border-violet-500/20"
+      color: "text-pink-400",
+      bg: "bg-pink-500/10",
+      border: "border-pink-500/20"
     }
   ];
 
   return (
     <div>
-      {/* Hero Section */}
-      <div className="flex items-center gap-2 mb-2 text-accent-cyan text-sm font-semibold tracking-wider uppercase">
-        <Sparkles className="h-4 w-4" /> Technical Documentation
+      {/* Premium Hero Section */}
+      <div className="relative rounded-2xl overflow-hidden border border-border-light bg-bg-surface/40 backdrop-blur-md p-6 md:p-8 mb-8 mt-4 shadow-sm">
+        <div className="absolute top-0 right-0 h-[200px] w-[200px] bg-accent-start/8 rounded-full blur-[60px]" />
+        <div className="absolute bottom-0 left-0 h-[150px] w-[150px] bg-accent-cyan/8 rounded-full blur-[50px]" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-3 text-accent-cyan text-[11px] font-bold tracking-widest uppercase">
+            <Sparkles className="h-4 w-4" /> Technical Documentation
+          </div>
+          <h1 className="border-none mt-0 pt-0 mb-3 text-3xl md:text-4xl font-extrabold tracking-tight bg-gradient-to-r from-text-primary via-accent-start to-accent-cyan bg-clip-text text-transparent">
+            Veridia RAG Platform
+          </h1>
+          <p className="text-sm md:text-base text-text-secondary leading-relaxed max-w-2xl mt-0 mb-6">
+            Welcome to the technical documentation site for Veridia RAG — a state-of-the-art, local-first Retrieval-Augmented Generation system. This documentation covers the architecture, strategies, mathematical formulations, and step-by-step procedures powering the application.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <Link 
+              href="/setup/"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-accent-start to-accent-start/80 hover:shadow-glow text-white font-semibold text-xs md:text-sm transition-all"
+            >
+              <Terminal className="h-4 w-4" />
+              <span>Get Started</span>
+            </Link>
+            <Link 
+              href="/architecture/"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-bg-elevated/80 hover:bg-bg-hover text-text-primary border border-border-light text-xs md:text-sm font-semibold transition-all"
+            >
+              <span>System Architecture</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
       </div>
-      <h1>Veridia RAG Platform</h1>
-      <p className="text-lg text-text-secondary leading-relaxed">
-        Welcome to the technical documentation site for Veridia RAG — a state-of-the-art, local-first Retrieval-Augmented Generation system, co-designed and engineered by the Antigravity Coding Agent. This documentation covers the architecture, strategies, mathematical formulations, and step-by-step procedures powering the application.
-      </p>
 
       <div className="doc-alert doc-alert-note">
         <strong>What is Veridia?</strong> A fully open-source RAG platform that combines contextual chunking, hybrid dense-sparse retrieval, cross-encoder reranking, and self-reflective generation — all running locally with Ollama. No cloud dependencies. No API keys. No framework lock-in.
@@ -187,7 +212,7 @@ export default function Home() {
               </div>
               <h3 className="text-text-primary text-sm font-bold mt-0 mb-1 group-hover:text-accent-cyan transition-colors">{card.title}</h3>
               <p className="text-xs text-text-secondary m-0 leading-relaxed flex-grow">{card.desc}</p>
-              <span className="text-[11px] text-accent-cyan font-medium mt-3 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-[11px] text-accent-cyan font-semibold mt-3 inline-flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                 Read more <ArrowRight className="h-3 w-3" />
               </span>
             </div>
@@ -275,7 +300,7 @@ export default function Home() {
 ├── .github/workflows/           # CI/CD GitHub Actions (lint, test, deploy)
 ├── test_e2e_api.py              # End-to-end API integration tests
 └── test_diagnostic.py           # Model & connectivity diagnostic tests`}</code>
-      </pre>
+</pre>
 
       <div className="doc-alert doc-alert-tip">
         <strong>Quick Tip:</strong> Select the menu options in the left sidebar to explore the exact file pathways, configuration overrides, mathematical formulas, and CI/CD manual workflow scripts.
@@ -287,7 +312,7 @@ export default function Home() {
       <div className="mt-8 flex justify-end">
         <Link 
           href="/architecture/" 
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-accent-start to-accent-end text-text-primary font-medium hover:shadow-glow transition-all"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-accent-start to-accent-end text-white font-semibold hover:shadow-glow transition-all"
         >
           <span>Get Started — Architecture Overview</span>
           <ArrowRight className="h-4 w-4" />

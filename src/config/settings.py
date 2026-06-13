@@ -25,10 +25,35 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class EmbeddingConfig(BaseModel):
     """Configuration for the embedding model."""
 
+    provider: str = Field(
+        default="sentence_transformers",
+        description="Embedding backend: sentence_transformers | qwen3 | openai",
+    )
     model_name: str = Field(default="all-MiniLM-L6-v2", description="HuggingFace model ID")
     dimension: int = Field(default=384, description="Embedding vector dimension")
     batch_size: int = Field(default=64, description="Batch size for embedding")
     normalize: bool = Field(default=True, description="L2-normalize embeddings")
+    # Qwen3 / Matryoshka: truncate native dims (1024/2560/4096) down to this many.
+    # null = use the model's native dimension.
+    truncate_dim: int | None = Field(
+        default=None,
+        description="Matryoshka truncation dimension (null = native)",
+    )
+    max_seq_length: int | None = Field(
+        default=None,
+        description="Override max input tokens (Qwen3 supports up to 32K)",
+    )
+    # Cloud / remote backend options (used by qwen3 'ollama' backend or openai)
+    backend: str = Field(
+        default="sentence_transformers",
+        description="qwen3 sub-backend: sentence_transformers | ollama",
+    )
+    host: str = Field(
+        default="http://127.0.0.1:11434",
+        description="Ollama host for qwen3 ollama / embedding backend",
+    )
+    api_key: str | None = Field(default=None, description="API key for cloud embedding providers")
+    base_url: str | None = Field(default=None, description="Base URL for cloud embedding providers")
 
 
 class ChunkingConfig(BaseModel):
@@ -57,6 +82,10 @@ class RerankingConfig(BaseModel):
     """Configuration for the re-ranking stage."""
 
     enabled: bool = Field(default=True, description="Whether to enable re-ranking")
+    provider: str = Field(
+        default="cross_encoder",
+        description="Reranker backend: cross_encoder | qwen3",
+    )
     model_name: str = Field(
         default="cross-encoder/ms-marco-MiniLM-L-6-v2",
         description="Cross-encoder model for re-ranking",
@@ -67,11 +96,23 @@ class RerankingConfig(BaseModel):
 class GenerationConfig(BaseModel):
     """Configuration for the LLM generation stage."""
 
+    provider: str = Field(
+        default="ollama",
+        description="LLM backend: ollama | litellm",
+    )
     ollama_host: str = Field(default="http://127.0.0.1:11434", description="Ollama server URL")
     model: str = Field(default="qwen2.5:3b", description="Ollama model name")
     temperature: float = Field(default=0.1, description="Sampling temperature")
     max_tokens: int = Field(default=2048, description="Maximum tokens to generate")
     stream: bool = Field(default=True, description="Enable streaming responses")
+    # LiteLLM backend: a provider-prefixed model id, e.g. "openai/gpt-4o-mini",
+    # "anthropic/claude-sonnet-4-6", or "ollama/qwen2.5:3b".
+    litellm_model: str = Field(
+        default="ollama/qwen2.5:3b",
+        description="LiteLLM model id (provider-prefixed)",
+    )
+    api_key: str | None = Field(default=None, description="API key for cloud LLM via LiteLLM")
+    api_base: str | None = Field(default=None, description="API base URL for LiteLLM")
 
 
 class VectorStoreConfig(BaseModel):
@@ -102,6 +143,51 @@ class IngestionConfig(BaseModel):
         description="File extensions to process",
     )
     max_file_size_mb: int = Field(default=50, description="Max file size in MB")
+    pdf_parser: str = Field(
+        default="pymupdf",
+        description="PDF parsing backend: pymupdf | mineru (MinerU2.5 service)",
+    )
+    mineru_url: str | None = Field(
+        default=None,
+        description="Base URL of an external MinerU2.5 parsing service",
+    )
+
+
+class ObservabilityConfig(BaseModel):
+    """Configuration for tracing / observability (Langfuse)."""
+
+    enabled: bool = Field(default=False, description="Enable Langfuse tracing")
+    provider: str = Field(default="langfuse", description="Tracing backend: langfuse")
+    host: str = Field(default="http://localhost:3000", description="Langfuse host URL")
+    public_key: str | None = Field(default=None, description="Langfuse public key")
+    secret_key: str | None = Field(default=None, description="Langfuse secret key")
+
+
+class CacheConfig(BaseModel):
+    """Configuration for semantic answer caching."""
+
+    enabled: bool = Field(default=False, description="Enable semantic query cache")
+    similarity_threshold: float = Field(
+        default=0.95,
+        description="Min cosine similarity to count as a cache hit",
+    )
+    collection_name: str = Field(
+        default="_semantic_cache",
+        description="Chroma collection used to store cached query/answer pairs",
+    )
+    max_entries: int = Field(default=1000, description="Max cached entries (LRU-trimmed)")
+
+
+class SecurityConfig(BaseModel):
+    """Configuration for prompt-injection / data-leak guards."""
+
+    enabled: bool = Field(default=False, description="Enable input/output guards")
+    scan_input: bool = Field(default=True, description="Scan incoming queries")
+    scan_output: bool = Field(default=True, description="Scan generated answers")
+    block_on_detection: bool = Field(
+        default=False,
+        description="If True, raise on detection; else annotate and continue",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -143,16 +229,18 @@ class Settings(BaseSettings):
     vectorstore: VectorStoreConfig = Field(default_factory=VectorStoreConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     ingestion: IngestionConfig = Field(default_factory=IngestionConfig)
+    observability: ObservabilityConfig = Field(default_factory=ObservabilityConfig)
+    cache: CacheConfig = Field(default_factory=CacheConfig)
+    security: SecurityConfig = Field(default_factory=SecurityConfig)
 
     def __init__(self, **kwargs: Any) -> None:
         """Merge YAML config with env overrides."""
         yaml_data = _load_yaml_config()
-        # YAML values are defaults; kwargs (env) override them
+        # YAML values are defaults; kwargs (env) override them.
+        # Section names are derived from the model's own fields so that adding
+        # a new config section never requires touching a hardcoded whitelist.
         merged: dict[str, Any] = {}
-        for section_name in [
-            "embedding", "chunking", "retrieval", "reranking",
-            "generation", "vectorstore", "logging", "ingestion",
-        ]:
+        for section_name in type(self).model_fields:
             yaml_section = yaml_data.get(section_name, {})
             kwarg_section = kwargs.pop(section_name, {})
             if isinstance(yaml_section, dict) and isinstance(kwarg_section, dict):

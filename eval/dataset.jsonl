@@ -1,0 +1,8 @@
+// Golden evaluation set for RAGAS. One JSON object per line.
+// Replace these placeholders with real questions grounded in YOUR ingested docs.
+// Include: (a) simple fact questions, (b) multi-hop questions (to justify GraphRAG),
+// and (c) questions answerable only from tables/figures (to justify MinerU/ColPali).
+// Fields: question (required), ground_truth (recommended), collection, strategy (optional).
+{"question": "What RAG strategies does the Veridia platform support?", "ground_truth": "Naive, HyDE, Corrective (CRAG), Self-RAG, Agentic, and Adaptive routing.", "collection": "default_collection", "strategy": "naive"}
+{"question": "Which embedding model and vector store does the system use by default?", "ground_truth": "sentence-transformers all-MiniLM-L6-v2 embeddings with an embedded ChromaDB vector store.", "collection": "default_collection", "strategy": "naive"}
+{"question": "How does hybrid retrieval combine dense and sparse results?", "ground_truth": "It fuses dense vector search and BM25 keyword search using Reciprocal Rank Fusion (RRF).", "collection": "default_collection", "strategy": "naive"}

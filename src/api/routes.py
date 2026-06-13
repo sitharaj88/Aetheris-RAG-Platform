@@ -13,6 +13,7 @@ from typing import List
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile, BackgroundTasks
 from fastapi.responses import StreamingResponse
 
+from src.api.task_store import get_task_store
 from .schemas import (
     CollectionCreateRequest,
     CollectionInfo,
@@ -368,8 +369,8 @@ async def delete_all_documents(collection: str | None = None):
     _documents = {k: v for k, v in _documents.items() if v.collection != col}
 
 
-# ── Ingest Tasks Status Store ────────────────────────────────────────────────
-ingest_tasks: dict[str, dict] = {}
+# ── Ingest Tasks Status Store (SQLite-backed, restart-safe) ──────────────────
+ingest_tasks = get_task_store()
 
 
 def run_ingest_task(task_id: str, file_path: Path, filename: str, collection: str, file_size: int):
@@ -378,35 +379,42 @@ def run_ingest_task(task_id: str, file_path: Path, filename: str, collection: st
     from pathlib import Path
 
     def cb(step: str, progress: float, details: dict):
-        if task_id in ingest_tasks:
-            ingest_tasks[task_id]["step"] = step
-            ingest_tasks[task_id]["progress"] = progress
-            ingest_tasks[task_id]["message"] = details.get("message", "")
-            if step == "completed":
-                ingest_tasks[task_id]["status"] = "completed"
-                ingest_tasks[task_id]["chunks_created"] = details.get("chunks_created", 0)
-                ingest_tasks[task_id]["time_taken_ms"] = round((time.perf_counter() - start) * 1000, 2)
-                ingest_tasks[task_id]["completed_at"] = datetime.now(timezone.utc).isoformat()
-                
-                # Register in local cache as fallback
-                _documents[task_id] = DocumentInfo(
-                    id=task_id,
-                    filename=filename,
-                    chunk_count=details.get("chunks_created", 0),
-                    ingested_at=datetime.now(timezone.utc).isoformat(),
-                    collection=collection,
-                    file_size=file_size,
-                )
-            elif step == "failed":
-                ingest_tasks[task_id]["status"] = "failed"
-                ingest_tasks[task_id]["error"] = details.get("error", "Unknown error")
-                ingest_tasks[task_id]["time_taken_ms"] = round((time.perf_counter() - start) * 1000, 2)
-                ingest_tasks[task_id]["completed_at"] = datetime.now(timezone.utc).isoformat()
+        if not ingest_tasks.exists(task_id):
+            return
+        fields: dict = {
+            "step": step,
+            "progress": progress,
+            "message": details.get("message", ""),
+        }
+        if step == "completed":
+            fields.update(
+                status="completed",
+                chunks_created=details.get("chunks_created", 0),
+                time_taken_ms=round((time.perf_counter() - start) * 1000, 2),
+                completed_at=datetime.now(timezone.utc).isoformat(),
+            )
+            # Register in local cache as fallback
+            _documents[task_id] = DocumentInfo(
+                id=task_id,
+                filename=filename,
+                chunk_count=details.get("chunks_created", 0),
+                ingested_at=datetime.now(timezone.utc).isoformat(),
+                collection=collection,
+                file_size=file_size,
+            )
+        elif step == "failed":
+            fields.update(
+                status="failed",
+                error=details.get("error", "Unknown error"),
+                time_taken_ms=round((time.perf_counter() - start) * 1000, 2),
+                completed_at=datetime.now(timezone.utc).isoformat(),
+            )
+        ingest_tasks.update(task_id, **fields)
 
     try:
-        if task_id in ingest_tasks:
-            ingest_tasks[task_id]["status"] = "processing"
-            
+        if ingest_tasks.exists(task_id):
+            ingest_tasks.update(task_id, status="processing")
+
         pipeline = _get_pipeline()
         if not pipeline:
             raise Exception("RAG pipeline not initialized")
@@ -449,7 +457,7 @@ async def ingest_files(
             file_path.write_bytes(content)
 
             # Register task progress
-            ingest_tasks[task_id] = {
+            ingest_tasks.create(task_id, {
                 "task_id": task_id,
                 "filename": filename,
                 "collection": collection,
@@ -461,7 +469,7 @@ async def ingest_files(
                 "time_taken_ms": 0.0,
                 "error": None,
                 "completed_at": None,
-            }
+            })
 
             # Enqueue FastAPI background task
             background_tasks.add_task(
@@ -474,7 +482,7 @@ async def ingest_files(
             )
         except Exception as e:
             logger.error("Error queueing %s: %s", filename, e)
-            ingest_tasks[task_id] = {
+            ingest_tasks.create(task_id, {
                 "task_id": task_id,
                 "filename": filename,
                 "collection": collection,
@@ -486,7 +494,7 @@ async def ingest_files(
                 "time_taken_ms": 0.0,
                 "error": str(e),
                 "completed_at": datetime.now(timezone.utc).isoformat(),
-            }
+            })
 
     return IngestResponse(
         message=f"Queued {len(files)} file(s) for processing",
@@ -501,18 +509,17 @@ async def ingest_files(
 @router.get("/ingest/tasks", response_model=List[IngestTaskStatus])
 async def list_ingest_tasks(collection: str | None = None):
     """List all background ingestion tasks."""
-    tasks = list(ingest_tasks.values())
-    if collection:
-        tasks = [t for t in tasks if t["collection"] == collection]
+    tasks = ingest_tasks.all(collection)
     return [IngestTaskStatus(**t) for t in tasks]
 
 
 @router.get("/ingest/tasks/{task_id}", response_model=IngestTaskStatus)
 async def get_ingest_task(task_id: str):
     """Get the status of a specific background ingestion task."""
-    if task_id not in ingest_tasks:
+    task = ingest_tasks.get(task_id)
+    if task is None:
         raise HTTPException(status_code=404, detail=f"Task '{task_id}' not found")
-    return IngestTaskStatus(**ingest_tasks[task_id])
+    return IngestTaskStatus(**task)
 
 
 # ── Query ────────────────────────────────────────────────────────────────────
